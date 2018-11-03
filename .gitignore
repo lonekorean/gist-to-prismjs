@@ -1,0 +1,7 @@
+# ignore directories
+node_modules/
+
+#ignore specific filenames
+export.xml
+*-output.*
+.DS_Store

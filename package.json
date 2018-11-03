@@ -1,0 +1,19 @@
+{
+	"name": "gist-to-prismjs",
+	"version": "1.0.0",
+	"private": true,
+	"description": "Converts embedded GitHub gists into PrismJS code blocks.",
+	"main": "index.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"author": "Will Boyd <will@codersblock.com> (https://codersblock.com)",
+	"license": "MIT",
+	"engines": {
+		"node": ">= 10.12.0"
+	},
+	"dependencies": {
+		"minimist": "^1.2.0",
+		"request": "^2.88.0"
+	}
+}
