@@ -21,8 +21,8 @@ function init() {
 	argv = minimist(process.argv.slice(2), {
 		string: [
 			'input',
-			'username',
-			'token'
+			'user',
+			'pass'
 		]
 	});
 	
@@ -65,10 +65,10 @@ function processFileContent() {
 				'User-Agent': 'gist-to-prismjs'
 			}
 		};
-		if (argv.username && argv.token) {
+		if (argv.user && argv.pass) {
 			options.auth = {
-				user: argv.username,
-				pass: argv.token
+				user: argv.user,
+				pass: argv.pass
 			};
 		}
 		request.get(options, gistGetCallback.bind(this, gist));
