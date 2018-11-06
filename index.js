@@ -86,10 +86,10 @@ function requestGists() {
 
 function requestGistCallback(gist, error, response, body) {
 	if (error) {
-		console.log('Unable to get gist content.');
+		console.log('Unable to get content for gist ' + gist.id + '.');
 		console.log(error);
 	} else if (response.statusCode !== 200) {
-		console.log('Response status code ' + response.statusCode + ' received.');
+		console.log('Response status code ' + response.statusCode + ' received for gist ' + gist.id + '.');
 		console.log(body);
 	} else {
 		let json = JSON.parse(body);
