@@ -1,5 +1,6 @@
 const fs = require('fs');
 const minimist = require('minimist');
+const path = require('path');
 const request = require('request');
 
 // map certain gist langs to prism langs
@@ -31,6 +32,7 @@ function init() {
 	} else {
 		readInputFile();
 		processFileContent();
+		requestGists();
 	}
 }
 
@@ -57,8 +59,10 @@ function processFileContent() {
 	}
 
 	console.log('Found ' + gists.length + ' gists.');
+}
 
-	gists.forEach(gist => {
+function requestGists() {
+	gists.forEach((gist, index) => {
 		let options = {
 			url: 'https://api.github.com/gists/' + gist.id,
 			headers: {
@@ -71,11 +75,16 @@ function processFileContent() {
 				pass: argv.pass
 			};
 		}
-		request.get(options, gistGetCallback.bind(this, gist));
+
+		// stagger requests, otherwise the API may return a 403 for abuse
+		setTimeout(() => {
+			console.log('Fetching gist ' + gist.id + '.');
+			request.get(options, requestGistCallback.bind(this, gist));
+		}, index * 50);
 	});
 }
 
-function gistGetCallback(gist, error, response, body) {
+function requestGistCallback(gist, error, response, body) {
 	if (error) {
 		console.log('Unable to get gist content.');
 		console.log(error);
@@ -108,7 +117,9 @@ function writeOutputFile() {
 	});
 
 	// output filename is just the input filename suffixed with "-output"
-	let outputFile = argv.input.replace('.', '-output.');
+	let inputPathObj = path.parse(argv.input);
+	let outputFile = path.join(inputPathObj.dir, inputPathObj.name + '-output' + inputPathObj.ext);
+
 	fs.writeFile(outputFile, fileContent, (err) => {
 		if (err) {
 			console.log('Unable to write output file.');
