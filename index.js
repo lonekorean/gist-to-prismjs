@@ -23,12 +23,18 @@ function init() {
 		string: [
 			'input',
 			'user',
-			'pass'
-		]
+			'pass',
+			'escape'
+		],
+		default: {
+			escape: 'htmlencode'
+		}
 	});
 	
 	if (!argv.input) {
 		console.log('Input file not specified.');
+	} else if (!['htmlencode', 'script', 'comment', 'none'].includes(argv.escape)) {
+		console.log('Unrecognized value for escape.');
 	} else {
 		readInputFile();
 		processFileContent();
@@ -80,7 +86,7 @@ function requestGists() {
 		setTimeout(() => {
 			console.log('Fetching gist ' + gist.id + '.');
 			request.get(options, requestGistCallback.bind(this, gist));
-		}, index * 50);
+		}, index * 25);
 	});
 }
 
@@ -110,9 +116,7 @@ function requestGistCallback(gist, error, response, body) {
 function writeOutputFile() {
 	// replace each gist script tag in file content with a code block
 	gists.forEach(gist => {
-		let prismLang = translateLanguage(gist.language);
-		let classAttr = prismLang ? ' class="language-' + prismLang + '"' : '';
-		let codeBlock = '<pre><code' + classAttr + '>' + gist.content + '</code></pre>';
+		let codeBlock = buildCodeBlock(gist);
 		fileContent = fileContent.replace(gist.scriptTag, codeBlock);
 	});
 
@@ -128,6 +132,30 @@ function writeOutputFile() {
 			console.log('Wrote ' + outputFile + '.');
 		}
 	});
+}
+
+function buildCodeBlock(gist) {
+	let prismLang = translateLanguage(gist.language);
+	let classAttr = prismLang ? ' class="language-' + prismLang + '"' : '';
+
+	if (argv.escape === 'script') {
+		return '<script type="text/plain"' + classAttr + '>' + gist.content + '</script>';
+	} else {
+		let content;
+		switch (argv.escape) {
+			case 'htmlencode':
+				content = gist.content.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+				break;
+			case 'comment':
+				content = '<!--' + gist.content + '-->';
+				break;
+			case 'none':
+				content = gist.content;
+				break;
+		}
+
+		return '<pre><code' + classAttr + '>' + content + '</code></pre>';
+	}
 }
 
 function translateLanguage(gistLang) {
