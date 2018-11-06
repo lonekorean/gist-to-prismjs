@@ -44,7 +44,7 @@ function readInputFile() {
 }
 
 function processFileContent() {
-	let regex = (/<script src="https:\/\/gist\.github\.com\/[^\/]+\/(\d+)\.js"><\/script>/gi);
+	let regex = (/<script src="https:\/\/gist\.github\.com\/[^\/]+\/(\w+)\.js"><\/script>/gi);
 	let match;
 	while ((match = regex.exec(fileContent)) !== null) {
 		gists.push({
