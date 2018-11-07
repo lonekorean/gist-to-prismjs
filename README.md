@@ -63,20 +63,11 @@ Your GitHub password or API token. Not required, but providing it (along with `-
 - Type: String
 - Default: `htmlencode`
 
-Code within gists typically require some sort of processing to ensure that it renders correctly (especially if it contains HTML). There are several options for how to handle this.
+Code blocks typically require some sort of treatment to ensure that the code renders correctly (especially with HTML). There are several options for how to handle this.
 
-#### htmlencode
-
-Encodes `<` and `>` to `&lt;` and `&gt`.
-
-#### script
-
-Wraps code blocks with specialized `<script>` tags, compatible with the [unescaped-markup](https://prismjs.com/plugins/unescaped-markup/) plugin.
-
-#### comment
-
-Wraps the code inside of code blocks in an HTML comment (`<!--  -->`), compatible with the [unescaped-markup](https://prismjs.com/plugins/unescaped-markup/) plugin.
-
-#### none
-
-Does no additional processing. Useful if you have your own additional processing to take care of things. Be warned, by itself, this can lead to improperly rendered code blocks.
+| Value | Description |
+| - | - |
+| `htmlencode` | Encodes `<` and `>` to `&lt;` and `&gt;`. |
+| `script` | Wraps code blocks with specialized `<script>` tags, compatible with the [unescaped-markup](https://prismjs.com/plugins/unescaped-markup/) plugin. |
+| `comment` | Wraps the code inside of code blocks in an HTML comment (`<!--  -->`), compatible with the [unescaped-markup](https://prismjs.com/plugins/unescaped-markup/) plugin. |
+| `none` | Does no additional processing. Useful if you have your own additional processing to take care of things. Be warned, by itself, this can lead to improperly rendered code blocks. |
